@@ -1,0 +1,5 @@
+Cluster,Income,Age,TotalSpend,TotalPurchases,TotalChildren,CampaignAccepted,Recency,Count,% Share,Segment
+0,79766.2,53.9,1590.5,19.9,0.2,1.9,49.6,233,10.5,Budget Families
+1,43603.4,59.8,197.8,8.2,1.7,0.1,48.1,639,28.9,High-Value Loyalists
+2,67680.5,58.3,1040.5,19.1,0.6,0.1,48.7,747,33.8,At-Risk Customers
+3,30231.9,46.4,116.5,6.2,0.9,0.1,50.2,593,26.8,Potential Converters
