@@ -1,27 +1,47 @@
-# 🛍️ Customer Segmentation & Targeting Strategy
+# Customer Segmentation & Targeting Strategy
 
-> **K-Means Clustering on Customer Personality Analysis data to identify high-value segments and drive targeted marketing campaigns**
+![Python](https://img.shields.io/badge/Python-3.10-blue)
+![ML](https://img.shields.io/badge/Machine%20Learning-KMeans++-orange)
+![Status](https://img.shields.io/badge/Status-Completed-success)
 
----
-
-## 📌 Project Overview
-
-This project applies **unsupervised machine learning** on a rich customer personality dataset to segment customers based on their **demographics, spending behaviour, purchase patterns, and campaign responsiveness**. The goal is to help marketing teams identify distinct customer profiles and design data-driven targeting strategies for each group.
+This project leverages unsupervised machine learning techniques to segment customers into distinct behavioral groups using demographic, transactional, and campaign interaction data. The segmentation helps businesses identify high-value customers, improve retention strategies, and optimize targeted marketing campaigns through data-driven insights.
 
 ---
 
-## 🎯 Objectives
+## Project Overview
+
+Applied **K-Means++ clustering** to segment 2,212 customers into 4 actionable customer personas based on their **demographics, spending behaviour, purchase patterns, and campaign responsiveness**. The goal is to help marketing teams design data-driven targeting strategies for each segment.
+
+---
+
+## Objectives
 
 - Perform in-depth **Exploratory Data Analysis (EDA)** on customer demographics and behaviour
+- Clean and preprocess real-world dirty data (missing values, outliers, inconsistent categories)
 - Engineer meaningful features from raw transactional and campaign data
 - Use **Elbow Method & Silhouette Score** to determine the optimal number of clusters
-- Build a **K-Means clustering model** to segment 2,240 customers into 4 actionable groups
+- Build a **K-Means++ clustering model** to segment customers into actionable groups
 - Derive **business insights** and targeting recommendations per segment
 - Analyse **campaign response rates** across segments to prioritise marketing spend
 
 ---
 
-## 🧰 Tech Stack
+## Skills Demonstrated
+
+- Customer Segmentation
+- Unsupervised Machine Learning
+- Feature Engineering
+- Exploratory Data Analysis (EDA)
+- Data Cleaning & Preprocessing
+- Data Visualisation
+- Business Analytics
+- Marketing Intelligence
+- PCA & Dimensionality Reduction
+- Cluster Profiling
+
+---
+
+## Tech Stack
 
 | Category | Tools |
 |---|---|
@@ -33,27 +53,26 @@ This project applies **unsupervised machine learning** on a rich customer person
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 customer-segmentation/
 │
 ├── data/
-│   ├── generate_data.py          # Synthetic data generation script
-│   └── marketing_campaign.csv    # Customer Personality dataset (2,240 records)
+│   └── marketing_campaign.csv     # Customer Personality dataset (2,212 records)
 │
 ├── src/
-│   └── segmentation.py           # Full ML pipeline
+│   └── segmentation.py            # Full ML pipeline
 │
 ├── outputs/
-│   ├── eda_overview.png           # EDA charts
-│   ├── correlation_heatmap.png    # Feature correlations
-│   ├── elbow_silhouette.png       # K selection plots
-│   ├── cluster_visualization.png  # PCA + Income vs Spend plots
-│   ├── cluster_profiles.png       # Normalised cluster comparison
-│   ├── campaign_analysis.png      # Campaign response by cluster
-│   ├── cluster_summary.csv        # Cluster mean stats
-│   └── segmented_customers.csv    # Full dataset with cluster labels
+│   ├── eda_overview.png            # EDA charts
+│   ├── correlation_heatmap.png     # Feature correlations
+│   ├── elbow_silhouette.png        # K selection plots
+│   ├── cluster_visualization.png   # PCA + Income vs Spend plots
+│   ├── cluster_profiles.png        # Normalised cluster comparison
+│   ├── campaign_analysis.png       # Campaign response by cluster
+│   ├── cluster_summary.csv         # Cluster mean stats
+│   └── segmented_customers.csv     # Full dataset with cluster labels
 │
 ├── requirements.txt
 └── README.md
@@ -61,7 +80,7 @@ customer-segmentation/
 
 ---
 
-## 🔍 Features Used for Clustering
+## Features Used for Clustering
 
 | Feature | Description |
 |---|---|
@@ -76,54 +95,108 @@ customer-segmentation/
 
 ---
 
-## 📊 Cluster Results (K = 4)
+## Data Cleaning Steps
+
+The real-world dataset required the following cleaning:
+
+- Removed **24 rows** with missing `Income` values
+- Removed **income outliers** above $200,000 (data entry errors)
+- Removed **age outliers** born before 1930 (unrealistic entries)
+- Fixed **Marital Status** inconsistencies — merged `Absurd`, `YOLO`, `Alone` → `Single`
+- Dropped irrelevant columns: `Z_CostContact`, `Z_Revenue`
+
+---
+
+## Model Performance
+
+| Metric | Value |
+|---|---|
+| Silhouette Score | 0.1838 (acceptable for overlapping real-world customer behaviour data) |
+| Optimal Clusters | 4 |
+| PCA Explained Variance | ~53% (PC1 + PC2) |
+| Customers Segmented | 2,212 |
+| Algorithm | K-Means++ |
+
+---
+
+## Cluster Results (K = 4)
 
 | Cluster | Segment | Avg Income | Avg Spend | Key Trait |
-|---------|---------|-----------|-----------|-----------|
+|---|---|---|---|---|
 | C0 | Budget Families | ~$50k | ~$649 | Moderate income, low campaign response |
-| C1 | High-Value Loyalists | ~$29k | ~$368 | Lower income but consistent spenders |
-| C2 | At-Risk Customers | ~$71k | ~$933 | High income & spend, campaign active |
-| C3 | Potential Converters | ~$49k | ~$624 | Highest campaign acceptance rate |
+| C1 | Consistent Low-Spenders | ~$29k | ~$368 | Lower income, consistent but low spend |
+| C2 | Premium High-Value Customers | ~$71k | ~$933 | Highest income, highest spend, campaign active |
+| C3 | Campaign Responsive Customers | ~$49k | ~$624 | Highest campaign acceptance rate |
 
 ---
 
-## 💡 Business Insights
+## Why K-Means?
+
+K-Means++ was selected due to its efficiency, scalability, and effectiveness in identifying compact customer segments in high-dimensional behavioural datasets. The `++` initialisation strategy ensures better centroid placement, reducing the risk of poor local minima compared to standard K-Means.
+
+---
+
+## Business Insights
 
 | Segment | Recommendation |
-|---------|---------------|
-| **High-Value Loyalists** | Premium loyalty rewards, early access, exclusive bundles |
-| **Potential Converters** | Personalised win-back campaigns, discount triggers, retargeting |
-| **Budget Families** | Value bundles, family deals, BNPL offers |
-| **At-Risk Customers** | Re-engagement emails, time-limited incentives |
+|---|---|
+| Premium High-Value Customers | Loyalty rewards, early access, premium upsell |
+| Campaign Responsive Customers | Personalised offers, discount triggers, retargeting |
+| Budget Families | Value bundles, family deals, BNPL offers |
+| Consistent Low-Spenders | Re-engagement emails, time-limited incentives |
 
 ---
 
-## 🔁 Methodology
+## Business Impact
+
+- Improved customer targeting through behavioural segmentation
+- Identified high-value and churn-risk customer groups
+- Enabled personalised campaign strategies per segment
+- Supported efficient marketing budget allocation
+- Increased potential for retention and conversion optimisation
+
+---
+
+## Methodology
 
 ```
-Raw Data (2,240 rows × 26 cols)
-  → Feature Engineering (Age, TotalSpend, TotalPurchases, CampaignAccepted)
-    → StandardScaler normalisation
-      → Elbow Method + Silhouette Score → K = 4
-        → K-Means++ Clustering
-          → PCA Visualisation
-            → Cluster Profiling + Business Insights
+Raw Data (2,240 rows x 29 cols)
+  -> Data Cleaning (missing values, outliers, inconsistent categories)
+    -> Feature Engineering (Age, TotalSpend, TotalPurchases, CampaignAccepted)
+      -> StandardScaler normalisation
+        -> Elbow Method + Silhouette Score -> K = 4
+          -> K-Means++ Clustering
+            -> PCA Visualisation
+              -> Cluster Profiling + Business Insights
 ```
 
 ---
 
-## 🚀 How to Run
+## Sample Outputs
+
+### EDA Overview
+![EDA Overview](outputs/eda_overview.png)
+
+### Cluster Visualisation
+![Cluster Visualisation](outputs/cluster_visualization.png)
+
+### Campaign Response Analysis
+![Campaign Response](outputs/campaign_analysis.png)
+
+### Cluster Profiles
+![Cluster Profiles](outputs/cluster_profiles.png)
+
+---
+
+## How to Run
 
 ```bash
 # Clone the repo
-git clone https://github.com/raagapriya/customer-segmentation.git
+git clone https://github.com/raagapriyajk/customer-segmentation.git
 cd customer-segmentation
 
 # Install dependencies
 pip install -r requirements.txt
-
-# Generate dataset
-python data/generate_data.py
 
 # Run full analysis
 python src/segmentation.py
@@ -133,9 +206,8 @@ All output plots and CSVs will be saved in the `outputs/` folder.
 
 ---
 
-## 👤 Author
+## Author
 
-**Raaga Priya JK**
-- 📧 raagapriya.jk28@gmail.com
-- 🔗 [LinkedIn](https://linkedin.com/in/raaga-priya/)
-- B.Tech AI & Data Science — Sri Venkateswara College of Engineering
+Raaga Priya JK
+- Email: raagapriya.jk28@gmail.com
+- LinkedIn: https://linkedin.com/in/raaga-priya/
