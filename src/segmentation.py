@@ -10,10 +10,11 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.metrics import silhouette_score
 from sklearn.decomposition import PCA
+from scipy.cluster.hierarchy import dendrogram, linkage
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -336,6 +337,61 @@ for seg, rec in insights.items():
 # Save outputs
 profile.to_csv('outputs/cluster_summary.csv')
 df.to_csv('outputs/segmented_customers.csv', index=False)
+
+# ── 12. Algorithm Comparison ───────────────────────────────────────────────
+print("\n[9] Comparing clustering algorithms...")
+
+# Hierarchical
+agg = AgglomerativeClustering(n_clusters=OPTIMAL_K, linkage='ward')
+df['Hierarchical_Cluster'] = agg.fit_predict(X_scaled)
+sil_agg = silhouette_score(X_scaled, df['Hierarchical_Cluster'])
+
+# DBSCAN
+dbscan = DBSCAN(eps=1.5, min_samples=10)
+df['DBSCAN_Cluster'] = dbscan.fit_predict(X_scaled)
+n_noise = (df['DBSCAN_Cluster'] == -1).sum()
+n_db    = len(set(df['DBSCAN_Cluster'])) - (1 if -1 in df['DBSCAN_Cluster'].values else 0)
+valid   = df['DBSCAN_Cluster'] != -1
+sil_db  = silhouette_score(X_scaled[valid], df.loc[valid,'DBSCAN_Cluster']) if n_db > 1 else 0
+
+# Comparison chart
+fig, ax = plt.subplots(figsize=(9, 5))
+algos   = ['K-Means++', 'Hierarchical\n(Ward)', 'DBSCAN']
+scores  = [final_sil, sil_agg, sil_db]
+colors  = ['#457B9D', '#2A9D8F', '#E9C46A']
+bars    = ax.bar(algos, scores, color=colors, width=0.4, edgecolor='white', linewidth=0.8)
+for bar, score in zip(bars, scores):
+    ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.002,
+            f'{score:.4f}', ha='center', va='bottom', fontsize=12, fontweight='bold')
+ax.set_title('Silhouette Score Comparison Across Algorithms', fontsize=13, fontweight='bold')
+ax.set_ylabel('Silhouette Score')
+ax.set_ylim(0, max(scores) * 1.3)
+plt.tight_layout()
+plt.savefig('outputs/algorithm_comparison.png', bbox_inches='tight')
+plt.close()
+print("   → Saved: outputs/algorithm_comparison.png")
+
+# Dendrogram
+sample_idx = np.random.choice(len(X_scaled), 200, replace=False)
+linked     = linkage(X_scaled[sample_idx], method='ward')
+fig, ax    = plt.subplots(figsize=(14, 5))
+dendrogram(linked, ax=ax, truncate_mode='lastp', p=20,
+           leaf_rotation=45, leaf_font_size=9, color_threshold=10)
+ax.set_title('Hierarchical Clustering Dendrogram (sample of 200)', fontweight='bold')
+ax.set_xlabel('Customer Index')
+ax.set_ylabel('Ward Distance')
+plt.tight_layout()
+plt.savefig('outputs/dendrogram.png', bbox_inches='tight')
+plt.close()
+print("   → Saved: outputs/dendrogram.png")
+
+print(f"\n{'='*65}")
+print(f"  K-Means++ Silhouette  : {final_sil:.4f}")
+print(f"  Hierarchical Silhouette: {sil_agg:.4f}")
+print(f"  DBSCAN Silhouette     : {sil_db:.4f}  (noise points: {n_noise})")
+print(f"  Winner                : K-Means++ selected as final model")
+print(f"{'='*65}")
+
 print(f"\n[✓] Outputs saved to outputs/")
 print(f"[✓] Total customers segmented: {len(df)}")
 print(f"[✓] Final Silhouette Score: {final_sil:.4f}")
