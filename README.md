@@ -15,6 +15,24 @@ Applied **K-Means++ clustering** to segment 2,212 customers into 4 actionable cu
 
 ---
 
+## Dataset
+
+**Name:** Customer Personality Analysis  
+**Source:** Kaggle  
+**Link:** https://www.kaggle.com/datasets/imakash3011/customer-personality-analysis  
+**Size:** 2,240 rows × 29 columns  
+**Description:** Real-world marketing dataset containing customer demographics, product spending, purchase behaviour, and campaign response data collected by a retail company.
+
+| Column Group | Columns |
+|---|---|
+| Demographics | Year_Birth, Education, Marital_Status, Income, Kidhome, Teenhome |
+| Spending | MntWines, MntFruits, MntMeatProducts, MntFishProducts, MntSweetProducts, MntGoldProds |
+| Purchases | NumWebPurchases, NumCatalogPurchases, NumStorePurchases, NumWebVisitsMonth |
+| Campaigns | AcceptedCmp1, AcceptedCmp2, AcceptedCmp3, AcceptedCmp4, AcceptedCmp5, Response |
+| Other | Recency, Complain, Dt_Customer |
+
+---
+
 ## Objectives
 
 - Perform in-depth **Exploratory Data Analysis (EDA)** on customer demographics and behaviour
